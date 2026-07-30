@@ -64,6 +64,29 @@ These figures reflect the experimental setup recorded in that run; your numbers 
 
 ---
 
+## Architecture ablation — does the hybrid earn its complexity?
+
+`scripts/ablation_study.py` compares the hybrid CNN-ViT against a plain CNN, a plain
+ViT, and an EfficientNet-B0 baseline (single split, 20 epochs each, seed 42; results
+in `results/ablation_study_results.json`). This is a separate, smaller run from the
+5-fold CV numbers above — reported here to show what the extra architectural
+complexity actually buys:
+
+| Model | Accuracy | F1 | ROC-AUC | Params |
+|---|---|---|---|---|
+| CNN only (ResNet50) | 97.64% | 97.62% | 99.71% | 24.6M |
+| ViT only (ViT-B/16) | 98.43% | 98.43% | 99.94% | 85.8M |
+| EfficientNet-B0 baseline | 98.86% | 98.86% | 99.93% | 4.0M |
+| **Hybrid CNN-ViT (ours)** | **99.13%** | **99.13%** | 99.83% | 47.0M |
+
+Read honestly: EfficientNet-B0 is a strong, far cheaper baseline (4M params vs. 47M)
+that comes within ~0.3% accuracy of the hybrid. The hybrid still edges out every
+single-architecture baseline on accuracy and F1, which is the basis for using it as
+the primary model — but the margin over EfficientNet-B0 is small enough that a
+parameter-efficiency-constrained deployment could reasonably prefer it instead.
+
+---
+
 ## Quick start
 
 ### 1. Environment
